@@ -30,8 +30,8 @@
                 </apex:column>
             </apex:pageBlockTable>
         </apex:pageBlock> 
-        <apex:actionFunction action="{!primaryToContact}" name="methodContactsInJavaScript" reRender="relatedContacts">
-            <apex:param name="contactsParam" value="" />
+        <apex:actionFunction action="{!setPrimaryContact}" name="methodContactsInJavaScript" reRender="relatedContacts">
+            <apex:param name="setPrimaryContactParam" value="" />
         </apex:actionFunction>
     </apex:form>
         <script>

@@ -12,17 +12,17 @@ public class accountDetailsController {
         this.contacts = this.getAllContacts();
     }
 
-    public void primaryToContact() {
+    public void setPrimaryContact() {
         try {
-            String passedParam1 = Apexpages.currentPage().getParameters().get('contactsParam');
+            String passedParam1 = Apexpages.currentPage().getParameters().get('setPrimaryContactParam');
             
             List<Contact> allAccountContacts = this.getAllContacts();
-            for(Contact c : allAccountContacts) {
-                c.Is_Primary_Contact__c = (c.id == passedParam1);
+            for(Contact contactRecord : allAccountContacts) {
+                contactRecord.Is_Primary_Contact__c = (contactRecord.id == passedParam1);
             }
             
-            for(Contact c : this.contacts) {
-                c.Is_Primary_Contact__c = (c.id == passedParam1);
+            for(Contact contactRecord : this.contacts) {
+                contactRecord.Is_Primary_Contact__c = (contactRecord.id == passedParam1);
             }
  
             Database.update(allAccountContacts);
@@ -37,6 +37,7 @@ public class accountDetailsController {
         return [SELECT Name, Title, Phone, Is_Primary_Contact__c 
             FROM Contact 
             WHERE AccountId = :this.account.Id
+            + ' WITH SECURITY_ENFORCED'
         ];   
     }
     public void search() {
@@ -47,7 +48,6 @@ public class accountDetailsController {
         + ' AND AccountId = \''+this.account.Id+'\''
         + ' WITH SECURITY_ENFORCED';
         
-        system.debug('searchquery: ' + searchquery);
         try {
             this.contacts = Database.query(searchQuery);
         } catch (Exception ex) {
@@ -63,36 +63,34 @@ public class accountDetailsController {
         return acctPage;
     }
     public void save() {
-        system.debug('account ID:' +  this.account.id + 'account name:' +   + ' = ' +  'account number:' + this.account.accountNumber+ ' = ' + 'account active:' + this.account.Active__c); 
-        
-        if(this.validateAccount()) {
-            update this.account;
+        try {
+            if(this.validateAccount()) {
+                update this.account;
+            }
+        }
+        catch (Exception ex) {
+            system.debug('ex = '+ex);
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Some error occured during search.'));
         }
     }
 
     private Boolean validateAccount() {
         Boolean isValid = true;
-        //isBlank = null + ''
-        //isEmpty = null + '' + '         '
-        //validate account Name
         if(String.isBlank(this.account.Name)) {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter Account Name'));
             isValid = false;
         } else {
-            //validate account Name length
             if (this.account.name.length() > ACCOUNT_NAME_MAX_LENGTH) {
                 ApexPages.addmessage(new ApexPages.Message(ApexPages.Severity.ERROR, ACCOUNT_LENGTH_ERROR_MESSAGE));
                 isValid = false;
             }
         }
 
-        //validate account number
         if(String.isBlank(this.account.AccountNumber)) {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter Account Number!'));
             isValid = false;
         } 
 
-        //validate account phone
         if(String.isBlank(this.account.Phone)) {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter Account Phone!')); 
             isValid = false;
