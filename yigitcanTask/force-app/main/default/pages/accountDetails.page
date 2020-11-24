@@ -11,7 +11,7 @@
                 <apex:inputField value="{!account.Fax }"/>
             </apex:pageBlockSection>
             <apex:pageBlockButtons >
-                <apex:commandButton action="{!save}"   value="Save" id="saveTheButton" />
+                <apex:commandButton action="{!save}"   value="Save"  />
                 <apex:commandButton action="{!cancel}" value="Cancel" />
             </apex:pageBlockButtons>
         </apex:pageBlock>
@@ -26,18 +26,18 @@
                 <apex:column value="{!contact.Phone}"/>
                 <apex:column value="{!contact.Is_Primary_Contact__c}" id="ısPrimary"/>
                 <apex:column >
-                    <apex:outputLink onclick="setPrimartContactConfirmation('{!contact.Id}'); return false;" > Set As Primary </apex:outputLink> 
+                    <apex:outputLink onclick="doConfirm('{!contact.Id}'); return false;" > Set As Primary </apex:outputLink> 
                 </apex:column>
             </apex:pageBlockTable>
         </apex:pageBlock> 
-        <apex:actionFunction action="{!setPrimaryContact}" name="setPrimaryContactInJavaScript" reRender="relatedContacts">
-            <apex:param name="contactId" value="" />
+        <apex:actionFunction action="{!setPrimaryContact}" name="methodContactsInJavaScript" reRender="relatedContacts">
+            <apex:param name="setPrimaryContactParam" value="" />
         </apex:actionFunction>
     </apex:form>
         <script>
-        function setPrimartContactConfirmation(id) {
-            if(confirm ("Are you sure?")){
-                return setPrimaryContactInJavaScript(id);   
+        function doConfirm(id) {
+            if(confirm ("Are you sure want to complete?")){
+                return methodContactsInJavaScript(id);   
             }
         }
         </script>
