@@ -14,7 +14,7 @@ public class accountDetailsController {
 
     public void setPrimaryContact() {
         try {
-            String passedParam1 = Apexpages.currentPage().getParameters().get('setPrimaryContactParam');
+            String passedParam1 = Apexpages.currentPage().getParameters().get('contactId');
             
             List<Contact> allAccountContacts = this.getAllContacts();
             for(Contact contactRecord : allAccountContacts) {
@@ -37,7 +37,7 @@ public class accountDetailsController {
         return [SELECT Name, Title, Phone, Is_Primary_Contact__c 
             FROM Contact 
             WHERE AccountId = :this.account.Id
-            + ' WITH SECURITY_ENFORCED'
+            WITH SECURITY_ENFORCED
         ];   
     }
     public void search() {
